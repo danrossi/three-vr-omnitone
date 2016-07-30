@@ -18,7 +18,7 @@ export { OmniTonePosition } from '../three-vr-omnitone/src/OmniTonePosition.js';
 
 These can be accessed as THREE.OmniToneAudio and THREE.OmniTonePosition.
 
-The main project file can be stored externally from Three.js and include paths updated. 
+The main project file can be stored externally from Three.js and include paths updated.
 
 
 
@@ -67,7 +67,7 @@ Within an OrbitControls change event.
 #### Methods
 
 ```js
-audioPosition.enable();   // update the rotation of the Omnitone decoder.
+audioPosition.update();   // update the rotation of the Omnitone decoder.
 audio.mode = "ambisonic";  // set the mode of the Omnitone deocder.
 audio.setRotationMatrix([]) // set the rotation matrix of the Omnitone decoder with a Float32Array typed array of the Camera matrix or quartonion.
 ```
