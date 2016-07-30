@@ -25,6 +25,13 @@ The main project file can be stored externally from Three.js and include paths u
 ## Usage
 
 ```js
+
+//get or set the video element to use for the Omnitone decoder
+var video = document.createElement("video");
+
+
+
+
 var camera = new THREE.PerspectiveCamera(75, width / height, 1, 1000);
 
 var config = {
@@ -37,6 +44,16 @@ var config = {
 };
 
 var audio = new THREE.OmniToneAudio(video, config);
+
+audio.addEventListener("omnitoneready", function(event) {
+    console.log("Omnitone ready");
+});
+
+audio.addEventListener("omnitoneerror", function(event) {
+    console.log("Omnitone init error ", event.error);
+});
+
+
 var audioPosition = new THREE.OmniTonePosition(audio, camera);
 
 ```
