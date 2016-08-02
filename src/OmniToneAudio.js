@@ -70,7 +70,7 @@ Object.assign( OmniToneAudio.prototype, EventDispatcher.prototype, {
         this._foaDecoder = Omnitone.createFOADecoder(this.audioContext, element, config);
 
         //set the mode to ambisonic as default which can be changed to "none" externally.
-        this.mode = "ambisonic";
+        //this.mode = "ambisonic";
 
         //initialize the decoder and return the promises as events.
         this._foaDecoder.initialize().then(function () {
