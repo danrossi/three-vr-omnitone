@@ -30,7 +30,7 @@ function OmniToneAudio( element, options ) {
 
     var ua = navigator.userAgent;
 
-    this.audioContext = getAudioContext(),
+    this.audioContext = getContext(),
         this.isSafari = /Safari/.test(ua) && !/Chrome/.test(ua),
         this._channelMap = [],
         this._foaDecoder = null;
