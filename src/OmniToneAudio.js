@@ -1,5 +1,5 @@
 import { EventDispatcher } from '../../three.js/src/core/EventDispatcher';
-import { getContext } from '../../three.js/src/audio/AudioContext';
+import { AudioContext } from '../../three.js/src/audio/AudioContext';
 import { OmnitoneUtils } from './utils/OmnitoneUtils.js';
 
 /**
@@ -30,7 +30,7 @@ function OmniToneAudio( element, options ) {
 
     var ua = navigator.userAgent;
 
-    this.audioContext = getContext(),
+    this.audioContext = AudioContext.getContext(),
         this.isSafari = /Safari/.test(ua) && !/Chrome/.test(ua),
         this._channelMap = [],
         this._foaDecoder = null;
