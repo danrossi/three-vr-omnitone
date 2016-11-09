@@ -1,5 +1,5 @@
 import { EventDispatcher } from '../../three.js/src/core/EventDispatcher';
-import { getAudioContext } from '../../three.js/src/audio/AudioContext';
+import { getContext } from '../../three.js/src/audio/AudioContext';
 import { OmnitoneUtils } from './utils/OmnitoneUtils.js';
 
 /**
