@@ -12,18 +12,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+class OmniToneUtils  {
+	/**
+	 * Static util for Safari channel reordering.
+	 * @param channels
+	 * @returns {*}
+	 */
+	static channelMapSafari(channels) {
+	    channels.splice(0, 0, channels.splice(2, 1)[0]);
+	    return channels;
+	}
 
+}
 
-var OmnitoneUtils = {};
-
-/**
- * Static util for Safari channel reordering.
- * @param channels
- * @returns {*}
- */
-OmnitoneUtils.channelMapSafari = function (channels) {
-    channels.splice(0, 0, channels.splice(2, 1)[0]);
-    return channels;
-};
-
-export { OmnitoneUtils }
+export { OmniToneUtils }

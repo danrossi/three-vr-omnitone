@@ -28,49 +28,44 @@ import { mat3 } from './gl-matrix/mat3.js';
  * @param {THREE.Camera} camera The Three.js camera object to obtain matrix / quartonion values from.
  * @constructor
  */
-function OmniTonePosition( audio, camera ) {
-    this.audio = audio, this.camera = camera, this._rotationMatrix = mat3.create();
-}
+class OmniTonePosition {
 
-OmniTonePosition.prototype =  {
-
-    constructor: OmniTonePosition,
+    constructor( audio, camera ) {
+        this.audio = audio, this.camera = camera, this._rotationMatrix = mat3.create();
+    }
 
     /**
      * Update the rotation matrix from the camera's current matrix.
      * Quartonion can be used also but still unsure what the best method is.
      */
-    update: function () {
+    update() {
         this.camera.updateMatrix();
         this.setRotationFromMatrix(this.camera.matrix.elements);
         //this.setRotationMatrixFromQuart(this.camera.quaternion);
-    },
+    }
 
     /**
      * Convert the Camera's matrix in Matrix4 format, convert to a 3x3 matrix with Matrix3, then update the Omnitone rotation matrix.
      * @param {THREE.Matrix4} matrix
      */
-    setRotationFromMatrix: function (matrix) {
+    setRotationFromMatrix(matrix) {
         //couldn't work out how quickly perform a Matrix4 to Matrix3 conversion so use parts of the gl-matrix math library.
         mat3.fromMat4(this._rotationMatrix, matrix);
         //update the audio matrix with a Float32Array typed array of the Matrix3
         this.audio.setRotationMatrix(this._rotationMatrix);
-    },
+    }
 
     /**
      * If the Camera's matrix is not suitable as it requires also updating the matrix manually use the Camera's quartion camera camera.quartonion.
      * The matrix takes into account both position and quartion. Doing such transform might not perform well compared to just convertin the quartion to a Matrix3.
      * @param quart
      */
-    setRotationMatrixFromQuart: function ( quart ) {
+    setRotationMatrixFromQuart( quart ) {
         //couldn't work out how quickly perform a quartonion to Matrix3 conversion so use parts of the gl-matrix math library.
         mat3.fromQuat(this._rotationMatrix, quart.toArray());
         //update the audio matrix with a Float32Array typed array of the Matrix3
         this.audio.setRotationMatrix(this._rotationMatrix);
     }
-
-};
-
-
+}
 
 export { OmniTonePosition };

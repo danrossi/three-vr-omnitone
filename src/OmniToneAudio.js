@@ -1,6 +1,6 @@
 import { EventDispatcher } from '../../three.js/src/core/EventDispatcher';
 import { AudioContext } from '../../three.js/src/audio/AudioContext';
-import { OmnitoneUtils } from './utils/OmnitoneUtils.js';
+import { OmniToneUtils } from './utils/OmniToneUtils.js';
 
 /**
  * Copyright 2016 Daniel Rossi
@@ -26,23 +26,23 @@ import { OmnitoneUtils } from './utils/OmnitoneUtils.js';
  * @author danrossi / https://github.com/danrossi
  */
 
-function OmniToneAudio( element, options ) {
+class OmniToneAudio extends EventDispatcher {
 
-    var ua = navigator.userAgent;
+    constructor( element, options ) {
 
-    this.audioContext = AudioContext.getContext(),
-        this.isSafari = /Safari/.test(ua) && !/Chrome/.test(ua),
-        this._channelMap = [],
-        this._foaDecoder = null;
+        super();
+
+        const ua = navigator.userAgent;
+
+        this.audioContext = AudioContext.getContext(),
+            this.isSafari = /Safari/.test(ua) && !/Chrome/.test(ua),
+            this._channelMap = [],
+            this._foaDecoder = null;
 
 
-    this.init(element, options);
+        this.init(element, options);
 
-}
-
-Object.assign( OmniToneAudio.prototype, EventDispatcher.prototype, {
-
-    constructor: OmniToneAudio,
+    }
 
     /**
      * Initalize the Omnitone decoder
@@ -50,13 +50,13 @@ Object.assign( OmniToneAudio.prototype, EventDispatcher.prototype, {
      * @param {HtmlMediaElement} element    The video element to use for the deocder
      * @param {object} options  The Omnitone config options
      */
-    init: function (element, options) {
+    init(element, options) {
 
         //set a required channel map or use the default.
         this.channelMap = options.channelMap || [0, 1, 2, 3];
 
         //add extra configs like post gain
-        var config = {
+        const config = {
             postGainDB: options.postGainDB || 0,
             channelMap: this.channelMap
         }
@@ -73,59 +73,44 @@ Object.assign( OmniToneAudio.prototype, EventDispatcher.prototype, {
         //this.mode = "ambisonic";
 
         //initialize the decoder and return the promises as events.
-        this._foaDecoder.initialize().then(function () {
+        this._foaDecoder.initialize().then(() => {
             this.dispatchEvent({ type: "omnitoneready" });
-        }.bind(this), function (error) {
+        }, (error) => {
             this.dispatchEvent({ type: "omnitoneerror", error: error });
-        }.bind(this));
+        });
 
-    },
+    }
 
     /**
      * Set the Omnitone decoder's rotation matrix.
      * To be updated with the renderer animation or on controls changes.
      * @param {Float32Array} matrix The Float32Array typed array representation of Matrix3 to be used for the decoder rotation matrix.
      */
-    setRotationMatrix: function ( matrix ) {
+    setRotationMatrix( matrix ) {
         this._foaDecoder.setRotationMatrix(matrix);
     }
-
-} );
-
-
-Object.defineProperties( OmniToneAudio.prototype, {
 
     /**
      * Setter and getter for the channel map
      */
-    channelMap: {
+    get channelMap() {
+        return this._channelMap;
+    }
 
-        get: function () {
-            return this._channelMap;
-        },
+    set channelMap(vale) {
+        //reorder the configured channel map for Safari.
+        if (this.isSafari) OmniToneUtils.channelMapSafari(value);
 
-        set: function ( value ) {
-            //reorder the configured channel map for Safari.
-            if (this.isSafari) OmnitoneUtils.channelMapSafari(value);
+        this._channelMap = value;
+    }
 
-            this._channelMap = value;
-
-        }
-
-    },
-    /**
+     /**
      * Set the mode for the deocder
      * Possible options are bypass, none and ambisonic.
      */
-    mode: {
-
-        set: function ( value ) {
-            this._foaDecoder.setMode(value);
-        }
-
+    set mode(value) {
+        this._foaDecoder.setMode(value);
     }
-
-} );
-
+}
 
 export { OmniToneAudio };
