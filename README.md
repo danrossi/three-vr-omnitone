@@ -35,12 +35,10 @@ var video = document.createElement("video");
 var camera = new THREE.PerspectiveCamera(75, width / height, 1, 1000);
 
 var config = {
-    //custom base url to HRTF set. Not required.
-    HRTFSetUrl: "",
-    //custom channel map. Not required.
-    channelMap: null,
+    //custom channel map. Not required. defaults to [0, 1, 2, 3]
+    channelMap: [0, 1, 2, 3],
     //post decoding and convolution gain. Not required.
-    postGainDB: 0
+    postGain: 0
 };
 
 var audio = new THREE.OmniToneAudio(video, config);
