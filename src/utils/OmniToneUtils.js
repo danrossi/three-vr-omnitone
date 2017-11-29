@@ -1,3 +1,4 @@
+
 /**
  * Copyright 2016 Daniel Rossi
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -18,9 +19,25 @@ class OmniToneUtils  {
 	 * @param channels
 	 * @returns {*}
 	 */
+	static get isSafari() {
+		const ua = navigator.userAgent;
+		return /Safari/.test(ua) && !/Chrome/.test(ua);
+	}
+
 	static channelMapSafari(channels) {
 	    channels.splice(0, 0, channels.splice(2, 1)[0]);
 	    return channels;
+	}
+
+	static getOmniTone(audioContext, config) {
+		switch (config.ambisonicOrder) {
+			case 2:
+			case 3:
+				return Omnitone.createHOARenderer(audioContext, config);
+			default:
+				return Omnitone.createFOARenderer(audioContext, config);
+			break;
+		}
 	}
 
 }

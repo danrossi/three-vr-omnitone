@@ -1,6 +1,3 @@
-import { Matrix3 } from '../../three.js/src/math/Matrix3';
-import { mat3 } from './gl-matrix/mat3.js';
-
 /**
  * Copyright 2016 Daniel Rossi
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -31,7 +28,7 @@ import { mat3 } from './gl-matrix/mat3.js';
 class OmniTonePosition {
 
     constructor( audio, camera ) {
-        this.audio = audio, this.camera = camera, this._rotationMatrix = mat3.create();
+        this.audio = audio, this.camera = camera;
     }
 
     /**
@@ -41,7 +38,6 @@ class OmniTonePosition {
     update() {
         this.camera.updateMatrix();
         this.setRotationFromMatrix(this.camera.matrix.elements);
-        //this.setRotationMatrixFromQuart(this.camera.quaternion);
     }
 
     /**
@@ -49,22 +45,8 @@ class OmniTonePosition {
      * @param {THREE.Matrix4} matrix
      */
     setRotationFromMatrix(matrix) {
-        //couldn't work out how quickly perform a Matrix4 to Matrix3 conversion so use parts of the gl-matrix math library.
-        mat3.fromMat4(this._rotationMatrix, matrix);
         //update the audio matrix with a Float32Array typed array of the Matrix3
-        this.audio.setRotationMatrix(this._rotationMatrix);
-    }
-
-    /**
-     * If the Camera's matrix is not suitable as it requires also updating the matrix manually use the Camera's quartion camera camera.quartonion.
-     * The matrix takes into account both position and quartion. Doing such transform might not perform well compared to just convertin the quartion to a Matrix3.
-     * @param quart
-     */
-    setRotationMatrixFromQuart( quart ) {
-        //couldn't work out how quickly perform a quartonion to Matrix3 conversion so use parts of the gl-matrix math library.
-        mat3.fromQuat(this._rotationMatrix, quart.toArray());
-        //update the audio matrix with a Float32Array typed array of the Matrix3
-        this.audio.setRotationMatrix(this._rotationMatrix);
+        this.audio.setRotationMatrix(matrix);
     }
 }
 

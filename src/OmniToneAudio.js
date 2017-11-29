@@ -1,5 +1,5 @@
-import { EventDispatcher } from '../../three.js/src/core/EventDispatcher';
-import { AudioContext } from '../../three.js/src/audio/AudioContext';
+import { EventDispatcher } from '../../three.js/src/core/EventDispatcher.js';
+import { AudioContext } from '../../three.js/src/audio/AudioContext.js';
 import { OmniToneUtils } from './utils/OmniToneUtils.js';
 
 /**
@@ -26,19 +26,17 @@ import { OmniToneUtils } from './utils/OmniToneUtils.js';
  * @author danrossi / https://github.com/danrossi
  */
 
-class OmniToneAudio extends EventDispatcher {
+export default class OmniToneAudio extends EventDispatcher {
 
     constructor( element, options ) {
 
         super();
 
-        const ua = navigator.userAgent;
-
-        this.audioContext = AudioContext.getContext(),
-            this.isSafari = /Safari/.test(ua) && !/Chrome/.test(ua),
-            this._channelMap = [],
-            this._foaDecoder = null;
-
+        this._audioContext = AudioContext.getContext(),
+        this._videoElementSource = this._audioContext.createMediaElementSource(element),
+        this._masterGain = this._audioContext.createGain(),
+        this._channelMap = [],
+        this._foaRenderer = null;
 
         this.init(element, options);
 
@@ -53,27 +51,39 @@ class OmniToneAudio extends EventDispatcher {
     init(element, options) {
 
         //set a required channel map or use the default.
-        this.channelMap = options.channelMap || [0, 1, 2, 3];
+       // this.channelMap = options.channelMap || [0, 1, 2, 3];
 
         //add extra configs like post gain
         const config = {
-            postGainDB: options.postGainDB || 0,
-            channelMap: this.channelMap
-        }
+            postGain: 0,
+            ambisonicOrder: 1,
+            channelMap: [0, 1, 2, 3]
+        };
 
-        //if a custom base url is set for self hosted HRTF IR files use this instead.
-        if (options.HRTFSetUrl) {
-            config.HRTFSetUrl = options.HRTFSetUrl
-        }
+        Object.assign(config, options, {});
 
-        //setup the Omnitone decoder
-        this._foaDecoder = Omnitone.createFOADecoder(this.audioContext, element, config);
+        console.log(config);
+
+        this._masterGain.gain.value = config.postGain;
+
+        this.channelMap = config.channelMap;
+
+        this._foaRenderer = OmniToneUtils.getOmniTone(this._audioContext, {
+          channelMap: this.channelMap,
+          ambisonicOrder: config.ambisonicOrder
+        });
+
+
+
+        this._foaRenderer.output.connect(this._masterGain);
 
         //set the mode to ambisonic as default which can be changed to "none" externally.
         //this.mode = "ambisonic";
 
         //initialize the decoder and return the promises as events.
-        this._foaDecoder.initialize().then(() => {
+        this._foaRenderer.initialize().then(() => {
+            this._videoElementSource.connect(this._foaRenderer.input);
+            this._masterGain.connect(this._audioContext.destination);
             this.dispatchEvent({ type: "omnitoneready" });
         }, (error) => {
             this.dispatchEvent({ type: "omnitoneerror", error: error });
@@ -87,7 +97,7 @@ class OmniToneAudio extends EventDispatcher {
      * @param {Float32Array} matrix The Float32Array typed array representation of Matrix3 to be used for the decoder rotation matrix.
      */
     setRotationMatrix( matrix ) {
-        this._foaDecoder.setRotationMatrix(matrix);
+        this._foaRenderer.setRotationMatrix4(matrix);
     }
 
     /**
@@ -97,9 +107,10 @@ class OmniToneAudio extends EventDispatcher {
         return this._channelMap;
     }
 
-    set channelMap(vale) {
+    set channelMap(value) {
         //reorder the configured channel map for Safari.
-        if (this.isSafari) OmniToneUtils.channelMapSafari(value);
+     
+        if (OmniToneUtils.isSafari) OmniToneUtils.channelMapSafari(value);
 
         this._channelMap = value;
     }
@@ -109,8 +120,8 @@ class OmniToneAudio extends EventDispatcher {
      * Possible options are bypass, none and ambisonic.
      */
     set mode(value) {
-        this._foaDecoder.setMode(value);
+        this._foaRenderer.setRenderingMode(value);
     }
 }
 
-export { OmniToneAudio };
+//export { OmniToneAudio };
