@@ -26,7 +26,7 @@ import { OmniToneUtils } from './utils/OmniToneUtils.js';
  * @author danrossi / https://github.com/danrossi
  */
 
-export default class OmniToneAudio extends EventDispatcher {
+class OmniToneAudio extends EventDispatcher {
 
     constructor( element, options ) {
 
@@ -122,4 +122,4 @@ export default class OmniToneAudio extends EventDispatcher {
     }
 }
 
-//export { OmniToneAudio };
+export { OmniToneAudio };
