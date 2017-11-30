@@ -38,8 +38,11 @@ var config = {
     //custom channel map. Not required. defaults to [0, 1, 2, 3]
     channelMap: [0, 1, 2, 3],
     //post decoding and convolution gain. Not required.
-    postGain: 0
+    postGain: 1,
+    //the ambisonic order. Either 1, 2 or 3 for 1st, 2nd and 3rd order rendering. Defaults to 1.
+    ambisonicOrder: 1
 };
+
 
 var audio = new THREE.OmniToneAudio(video, config);
 

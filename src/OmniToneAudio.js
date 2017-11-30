@@ -50,21 +50,19 @@ export default class OmniToneAudio extends EventDispatcher {
      */
     init(element, options) {
 
+
+
         //set a required channel map or use the default.
        // this.channelMap = options.channelMap || [0, 1, 2, 3];
 
         //add extra configs like post gain
         const config = {
-            postGain: 0,
+            postGain: 1,
             ambisonicOrder: 1,
             channelMap: [0, 1, 2, 3]
         };
 
         Object.assign(config, options, {});
-
-        console.log(config);
-
-        this._masterGain.gain.value = config.postGain;
 
         this.channelMap = config.channelMap;
 
@@ -73,7 +71,7 @@ export default class OmniToneAudio extends EventDispatcher {
           ambisonicOrder: config.ambisonicOrder
         });
 
-
+        this._masterGain.gain.value = config.postGain;
 
         this._foaRenderer.output.connect(this._masterGain);
 
