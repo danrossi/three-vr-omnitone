@@ -25,7 +25,7 @@
  * @param {THREE.Camera} camera The Three.js camera object to obtain matrix / quartonion values from.
  * @constructor
  */
-class OmniTonePosition {
+export default class OmniTonePosition {
 
     constructor( audio, camera ) {
         this.audio = audio, this.camera = camera;
@@ -49,5 +49,3 @@ class OmniTonePosition {
         this.audio.setRotationMatrix(matrix);
     }
 }
-
-export { OmniTonePosition };
