@@ -7,7 +7,7 @@ export default [
 		output: [
 			{
 				format: 'esm',
-				file: 'build/webgpu-renderer.module.js'
+				file: 'build/three-vr-omnitone.module.js'
 			}
 		]
 	}
