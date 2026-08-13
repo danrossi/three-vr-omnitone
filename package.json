@@ -3,7 +3,7 @@
   "version": "0.153.0",
   "description": "Three.js Omnitone Rotater",
   "module": "build/three-vr-omnitone.module.js",
-  "types": "./build/OmnitoneAudio.d.ts",
+  "types": "./index.d.ts",
   "type": "module",
   "scripts": {
     "build": "vite build"
@@ -11,7 +11,7 @@
   "author": "danielr",
   "overrides": {
     "@microsoft/api-extractor": {
-      "typescript": "$typescript"
+      "typescript": "6.0.x"
     }
   },
   "devDependencies": {

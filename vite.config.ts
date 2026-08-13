@@ -31,7 +31,7 @@ export default defineConfig(({ mode }) => {
       //license: true,
       emptyOutDir: false,
       lib: {
-        entry: ['./three-vr-omnitone.js'],
+        entry: ['./index.js'],
         fileName: (format, entryName) => {
           return `three-vr-omnitone.module.js`;
         },
