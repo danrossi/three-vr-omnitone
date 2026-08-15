@@ -27,10 +27,11 @@ import { OmniToneUtils } from './utils/OmniToneUtils.js';
 
 export default class OmniToneAudio extends EventDispatcher {
   /**
-   * Constructs a new XRGamepad
+   * Constructs a new OmniToneAudio
    *
    * @param {HTMLMediaElement} element =  The video element to use for the deocder.
    * @param {Object} options - The options.
+   * @constructor
    */
 
   constructor(element, options) {

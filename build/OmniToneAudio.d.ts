@@ -23,10 +23,11 @@ import { EventDispatcher } from 'three';
  */
 export default class OmniToneAudio extends EventDispatcher<any> {
     /**
-     * Constructs a new XRGamepad
+     * Constructs a new OmniToneAudio
      *
      * @param {HTMLMediaElement} element =  The video element to use for the deocder.
      * @param {Object} options - The options.
+     * @constructor
      */
     constructor(element: HTMLMediaElement, options: Object);
     /**
