@@ -16,8 +16,9 @@ export default defineConfig(({ mode }) => {
         // tsconfigPath: './tsconfig.json',
       }),
     ],
+
     resolve: {
-      //alias: aliases,
+      //alias: {},
     },
     define: {
       // Statically replaces process.env.NODE_ENV with the current string mode
@@ -38,10 +39,14 @@ export default defineConfig(({ mode }) => {
         formats: ['es'],
       },
       rolldownOptions: {
-        external: ['three'],
+        external: ['three', 'omnitone/build/omnitone.min.esm.js'],
 
         output: {
           format: 'es',
+          globals: {
+            //'omnitone/build/omnitone.min.esm.js': 'Omnitone',
+          },
+
           // Inlines dynamic imports to prevent separate chunk files
           codeSplitting: false,
           comments: false,

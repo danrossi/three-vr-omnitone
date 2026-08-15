@@ -1,4 +1,4 @@
-
+import Omnitone from 'omnitone/build/omnitone.min.esm.js';
 /**
  * Copyright 2016 Daniel Rossi
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -13,33 +13,42 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-class OmniToneUtils  {
-	/**
-	 * Static util for Safari channel reordering.
-	 * @param channels
-	 * @returns {*}
-	 */
-	static get isSafari() {
-		const ua = navigator.userAgent;
-		return /Safari/.test(ua) && !/Chrome/.test(ua);
-	}
+class OmniToneUtils {
+  /**
+   * Is Safari
+   * @returns {boolean}
+   */
+  static get isSafari() {
+    const ua = navigator.userAgent;
+    return /Safari/.test(ua) && !/Chrome/.test(ua);
+  }
 
-	static channelMapSafari(channels) {
-	    channels.splice(0, 0, channels.splice(2, 1)[0]);
-	    return channels;
-	}
+  /**
+   * Static util for Safari channel reordering.
+   * @param {number[]} channels
+   * @returns {number[]}
+   */
+  static channelMapSafari(channels) {
+    channels.splice(0, 0, channels.splice(2, 1)[0]);
+    return channels;
+  }
 
-	static getOmniTone(audioContext, config) {
-		switch (config.ambisonicOrder) {
-			case 2:
-			case 3:
-				return Omnitone.createHOARenderer(audioContext, config);
-			default:
-				return Omnitone.createFOARenderer(audioContext, config);
-			break;
-		}
-	}
-
+  /**
+   * Static util for Safari channel reordering.
+   * @param {AudioContext} audioContext - The audio context
+   * @param {Object} config - The config.
+   * @returns {any} - The foa renderer.
+   */
+  static getOmniTone(audioContext, config) {
+    switch (config.ambisonicOrder) {
+      case 2:
+      case 3:
+        return Omnitone.createHOARenderer(audioContext, config);
+      default:
+        return Omnitone.createFOARenderer(audioContext, config);
+        break;
+    }
+  }
 }
 
-export { OmniToneUtils }
+export { OmniToneUtils };

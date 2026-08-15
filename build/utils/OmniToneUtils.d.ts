@@ -14,11 +14,21 @@
  */
 export class OmniToneUtils {
     /**
-     * Static util for Safari channel reordering.
-     * @param channels
-     * @returns {*}
+     * Is Safari
+     * @returns {boolean}
      */
-    static get isSafari(): any;
-    static channelMapSafari(channels: any): any;
-    static getOmniTone(audioContext: any, config: any): any;
+    static get isSafari(): boolean;
+    /**
+     * Static util for Safari channel reordering.
+     * @param {number[]} channels
+     * @returns {number[]}
+     */
+    static channelMapSafari(channels: number[]): number[];
+    /**
+     * Static util for Safari channel reordering.
+     * @param {AudioContext} audioContext - The audio context
+     * @param {Object} config - The config.
+     * @returns {any} - The foa renderer.
+     */
+    static getOmniTone(audioContext: AudioContext, config: Object): any;
 }

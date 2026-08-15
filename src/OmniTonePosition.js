@@ -1,3 +1,6 @@
+import { Camera, Matrix4 } from 'three';
+
+import OmniToneAudio from './OmniToneAudio';
 /**
  * Copyright 2016 Daniel Rossi
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -19,33 +22,44 @@
  * @author danrossi / https://github.com/danrossi
  */
 
-/**
- *
- * @param {THREE.OmniToneAudio} audio The OmniToneAudio Omnitone wrapper to update the audio rotation matrix to.
- * @param {THREE.Camera} camera The Three.js camera object to obtain matrix / quartonion values from.
- * @constructor
- */
 export default class OmniTonePosition {
-
-    constructor( audio, camera ) {
-        this.audio = audio, this.camera = camera;
-    }
+  /**
+   *
+   * @param {OmniToneAudio} audio The OmniToneAudio Omnitone wrapper to update the audio rotation matrix to.
+   * @param {Camera} camera The Three.js camera object to obtain matrix / quartonion values from.
+   * @constructor
+   */
+  constructor(audio, camera) {
+    /**
+     * OmnitoneAudio.
+     *
+     * @type {OmniToneAudio}
+     */
+    this.audio = audio;
 
     /**
-     * Update the rotation matrix from the camera's current matrix.
-     * Quartonion can be used also but still unsure what the best method is.
+     * The three Camera.
+     *
+     * @type {Camera}
      */
-    update() {
-        this.camera.updateMatrix();
-        this.setRotationFromMatrix(this.camera.matrix.elements);
-    }
+    this.camera = camera;
+  }
 
-    /**
-     * Convert the Camera's matrix in Matrix4 format, convert to a 3x3 matrix with Matrix3, then update the Omnitone rotation matrix.
-     * @param {THREE.Matrix4} matrix
-     */
-    setRotationFromMatrix(matrix) {
-        //update the audio matrix with a Float32Array typed array of the Matrix3
-        this.audio.setRotationMatrix(matrix);
-    }
+  /**
+   * Update the rotation matrix from the camera's current matrix.
+   * Quartonion can be used also but still unsure what the best method is.
+   */
+  update() {
+    this.camera.updateMatrix();
+    this.setRotationFromMatrix(this.camera.matrix.elements);
+  }
+
+  /**
+   * Convert the Camera's matrix in Matrix4 format, convert to a 3x3 matrix with Matrix3, then update the Omnitone rotation matrix.
+   * @param {Matrix4} matrix - The rotation matrix
+   */
+  setRotationFromMatrix(matrix) {
+    //update the audio matrix with a Float32Array typed array of the Matrix3
+    this.audio.setRotationMatrix(matrix);
+  }
 }

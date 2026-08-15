@@ -1,4 +1,4 @@
-import { EventDispatcher, AudioContext } from 'three';
+import { EventDispatcher } from 'three';
 /**
  * Copyright 2016 Daniel Rossi
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -22,24 +22,64 @@ import { EventDispatcher, AudioContext } from 'three';
  * @author danrossi / https://github.com/danrossi
  */
 export default class OmniToneAudio extends EventDispatcher<any> {
-    constructor(element: any, options: any);
-    _audioContext: AudioContext;
-    _videoElementSource: any;
-    _masterGain: any;
-    _channelMap: any[];
-    _foaRenderer: any;
+    /**
+     * Constructs a new XRGamepad
+     *
+     * @param {HTMLMediaElement} element =  The video element to use for the deocder.
+     * @param {Object} options - The options.
+     */
+    constructor(element: HTMLMediaElement, options: Object);
+    /**
+     * The AudioContext
+     *
+     * @private
+     * @type {AudioContext}
+     */
+    private _audioContext;
+    /**
+     * Video element source node
+     *
+     * @private
+     * @type {MediaElementAudioSourceNode}
+     */
+    private _videoElementSource;
+    /**
+     * The master gain node.
+     *
+     * @private
+     * @type {GainNode}
+     */
+    private _masterGain;
+    /**
+     * The channel map.
+     *
+     * @private
+     * @type {number[]}
+     */
+    private _channelMap;
+    /**
+     * The foa renderer.
+     *
+     * @private
+     * @type {any}
+     */
+    private _foaRenderer;
     /**
      * Initalize the Omnitone decoder
      * Return promises as events.
-     * @param {HtmlMediaElement} element    The video element to use for the deocder
-     * @param {object} options  The Omnitone config options
+     * @param {Object} options  The Omnitone config options
      */
-    init(element: HtmlMediaElement, options: object): void;
-    set channelMap(value: any[]);
+    init(options: Object): void;
+    /**
+     * Set the custom channel map.
+     * @param {number[]} value The channel map.
+     */
+    set channelMap(value: number[]);
     /**
      * Setter and getter for the channel map
+     * @returns {number[]} The channel map.
      */
-    get channelMap(): any[];
+    get channelMap(): number[];
     /**
      * Set the Omnitone decoder's rotation matrix.
      * To be updated with the renderer animation or on controls changes.
@@ -47,8 +87,9 @@ export default class OmniToneAudio extends EventDispatcher<any> {
      */
     setRotationMatrix(matrix: Float32Array): void;
     /**
-    * Set the mode for the deocder
-    * Possible options are bypass, none and ambisonic.
-    */
-    set mode(value: any);
+     * Set the mode for the deocder
+     * Possible options are bypass, none and ambisonic.
+     * @param {"bypass" | "none" | "ambisonic"} value The rendering mode.
+     */
+    set mode(value: "bypass" | "none" | "ambisonic");
 }

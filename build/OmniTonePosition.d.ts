@@ -1,3 +1,5 @@
+import { default as OmniToneAudio } from './OmniToneAudio';
+import { Camera, Matrix4 } from 'three';
 /**
  * Copyright 2016 Daniel Rossi
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -17,16 +19,26 @@
  * The matrix rotation can be updated with the render animation or on a three.js controls change like with OrbitControls
  * @author danrossi / https://github.com/danrossi
  */
-/**
- *
- * @param {THREE.OmniToneAudio} audio The OmniToneAudio Omnitone wrapper to update the audio rotation matrix to.
- * @param {THREE.Camera} camera The Three.js camera object to obtain matrix / quartonion values from.
- * @constructor
- */
 export default class OmniTonePosition {
-    constructor(audio: any, camera: any);
-    audio: any;
-    camera: any;
+    /**
+     *
+     * @param {OmniToneAudio} audio The OmniToneAudio Omnitone wrapper to update the audio rotation matrix to.
+     * @param {Camera} camera The Three.js camera object to obtain matrix / quartonion values from.
+     * @constructor
+     */
+    constructor(audio: OmniToneAudio, camera: Camera);
+    /**
+     * OmnitoneAudio.
+     *
+     * @type {OmniToneAudio}
+     */
+    audio: OmniToneAudio;
+    /**
+     * The three Camera.
+     *
+     * @type {Camera}
+     */
+    camera: Camera;
     /**
      * Update the rotation matrix from the camera's current matrix.
      * Quartonion can be used also but still unsure what the best method is.
@@ -34,7 +46,7 @@ export default class OmniTonePosition {
     update(): void;
     /**
      * Convert the Camera's matrix in Matrix4 format, convert to a 3x3 matrix with Matrix3, then update the Omnitone rotation matrix.
-     * @param {THREE.Matrix4} matrix
+     * @param {Matrix4} matrix - The rotation matrix
      */
-    setRotationFromMatrix(matrix: THREE.Matrix4): void;
+    setRotationFromMatrix(matrix: Matrix4): void;
 }

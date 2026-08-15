@@ -1,4 +1,4 @@
-import { EventDispatcher, AudioContext } from 'three';
+import { EventDispatcher, AudioContext as ThreeAudioContext } from 'three';
 import { OmniToneUtils } from './utils/OmniToneUtils.js';
 
 /**
@@ -26,97 +26,140 @@ import { OmniToneUtils } from './utils/OmniToneUtils.js';
  */
 
 export default class OmniToneAudio extends EventDispatcher {
+  /**
+   * Constructs a new XRGamepad
+   *
+   * @param {HTMLMediaElement} element =  The video element to use for the deocder.
+   * @param {Object} options - The options.
+   */
 
-    constructor( element, options ) {
-
-        super();
-
-        this._audioContext = AudioContext.getContext(),
-        this._videoElementSource = this._audioContext.createMediaElementSource(element),
-        this._masterGain = this._audioContext.createGain(),
-        this._channelMap = [],
-        this._foaRenderer = null;
-
-        this.init(element, options);
-
-    }
+  constructor(element, options) {
+    super();
 
     /**
-     * Initalize the Omnitone decoder
-     * Return promises as events.
-     * @param {HtmlMediaElement} element    The video element to use for the deocder
-     * @param {object} options  The Omnitone config options
+     * The AudioContext
+     *
+     * @private
+     * @type {AudioContext}
      */
-    init(element, options) {
-
-
-
-        //set a required channel map or use the default.
-       // this.channelMap = options.channelMap || [0, 1, 2, 3];
-
-        //add extra configs like post gain
-        const config = {
-            postGain: 1,
-            ambisonicOrder: 1,
-            channelMap: [0, 1, 2, 3]
-        };
-
-        Object.assign(config, options, {});
-
-        this.channelMap = config.channelMap;
-
-        this._foaRenderer = OmniToneUtils.getOmniTone(this._audioContext, {
-          channelMap: this.channelMap,
-          ambisonicOrder: config.ambisonicOrder
-        });
-
-        this._masterGain.gain.value = config.postGain;
-
-        this._foaRenderer.output.connect(this._masterGain);
-
-        //set the mode to ambisonic as default which can be changed to "none" externally.
-        //this.mode = "ambisonic";
-
-        //initialize the decoder and return the promises as events.
-        this._foaRenderer.initialize().then(() => {
-            this._videoElementSource.connect(this._foaRenderer.input);
-            this._masterGain.connect(this._audioContext.destination);
-            this.dispatchEvent({ type: "omnitoneready" });
-        }, (error) => {
-            this.dispatchEvent({ type: "omnitoneerror", error: error });
-        });
-
-    }
+    this._audioContext = ThreeAudioContext.getContext();
 
     /**
-     * Set the Omnitone decoder's rotation matrix.
-     * To be updated with the renderer animation or on controls changes.
-     * @param {Float32Array} matrix The Float32Array typed array representation of Matrix3 to be used for the decoder rotation matrix.
+     * Video element source node
+     *
+     * @private
+     * @type {MediaElementAudioSourceNode}
      */
-    setRotationMatrix( matrix ) {
-        this._foaRenderer.setRotationMatrix4(matrix);
-    }
+    this._videoElementSource =
+      this._audioContext.createMediaElementSource(element);
 
     /**
-     * Setter and getter for the channel map
+     * The master gain node.
+     *
+     * @private
+     * @type {GainNode}
      */
-    get channelMap() {
-        return this._channelMap;
-    }
+    this._masterGain = this._audioContext.createGain();
 
-    set channelMap(value) {
-        //reorder the configured channel map for Safari.
-     
-        if (OmniToneUtils.isSafari) OmniToneUtils.channelMapSafari(value);
-
-        this._channelMap = value;
-    }
-
-     /**
-     * Set the mode for the deocder
-     * Possible options are bypass, none and ambisonic.
+    /**
+     * The channel map.
+     *
+     * @private
+     * @type {number[]}
      */
-    set mode(value) {
-        this._foaRenderer.setRenderingMode(value);
-    }
+    this._channelMap = [];
+
+    /**
+     * The foa renderer.
+     *
+     * @private
+     * @type {any}
+     */
+    this._foaRenderer = null;
+
+    this.init(options);
+  }
+
+  /**
+   * Initalize the Omnitone decoder
+   * Return promises as events.
+   * @param {Object} options  The Omnitone config options
+   */
+  init(options) {
+    //set a required channel map or use the default.
+    // this.channelMap = options.channelMap || [0, 1, 2, 3];
+
+    //add extra configs like post gain
+    const config = {
+      postGain: 1,
+      ambisonicOrder: 1,
+      channelMap: [0, 1, 2, 3],
+    };
+
+    Object.assign(config, options, {});
+
+    this.channelMap = config.channelMap;
+
+    this._foaRenderer = OmniToneUtils.getOmniTone(this._audioContext, {
+      channelMap: this.channelMap,
+      ambisonicOrder: config.ambisonicOrder,
+    });
+
+    this._masterGain.gain.value = config.postGain;
+
+    this._foaRenderer.output.connect(this._masterGain);
+
+    //set the mode to ambisonic as default which can be changed to "none" externally.
+    //this.mode = "ambisonic";
+
+    //initialize the decoder and return the promises as events.
+    this._foaRenderer.initialize().then(
+      () => {
+        this._videoElementSource.connect(this._foaRenderer.input);
+        this._masterGain.connect(this._audioContext.destination);
+        this.dispatchEvent({ type: 'omnitoneready' });
+      },
+      (error) => {
+        this.dispatchEvent({ type: 'omnitoneerror', error: error });
+      },
+    );
+  }
+
+  /**
+   * Set the Omnitone decoder's rotation matrix.
+   * To be updated with the renderer animation or on controls changes.
+   * @param {Float32Array} matrix The Float32Array typed array representation of Matrix3 to be used for the decoder rotation matrix.
+   */
+  setRotationMatrix(matrix) {
+    this._foaRenderer.setRotationMatrix4(matrix);
+  }
+
+  /**
+   * Setter and getter for the channel map
+   * @returns {number[]} The channel map.
+   */
+  get channelMap() {
+    return this._channelMap;
+  }
+
+  /**
+   * Set the custom channel map.
+   * @param {number[]} value The channel map.
+   */
+  set channelMap(value) {
+    //reorder the configured channel map for Safari.
+
+    if (OmniToneUtils.isSafari) OmniToneUtils.channelMapSafari(value);
+
+    this._channelMap = value;
+  }
+
+  /**
+   * Set the mode for the deocder
+   * Possible options are bypass, none and ambisonic.
+   * @param {"bypass" | "none" | "ambisonic"} value The rendering mode.
+   */
+  set mode(value) {
+    this._foaRenderer.setRenderingMode(value);
+  }
 }
