@@ -66,6 +66,10 @@ export default class OmniToneAudio extends EventDispatcher<any> {
      */
     private _foaRenderer;
     /**
+     * Resume the audio context
+     */
+    resume(): void;
+    /**
      * Initalize the Omnitone decoder
      * Return promises as events.
      * @param {Object} options  The Omnitone config options

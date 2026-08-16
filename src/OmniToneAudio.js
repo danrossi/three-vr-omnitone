@@ -82,6 +82,13 @@ export default class OmniToneAudio extends EventDispatcher {
   }
 
   /**
+   * Resume the audio context
+   */
+  resume() {
+    this._audioContext.resume();
+  }
+
+  /**
    * Initalize the Omnitone decoder
    * Return promises as events.
    * @param {Object} options  The Omnitone config options

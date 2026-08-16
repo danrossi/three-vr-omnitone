@@ -30,6 +30,9 @@ var OmniToneAudio = class extends EventDispatcher {
 		this._foaRenderer = null;
 		this.init(options);
 	}
+	resume() {
+		this._audioContext.resume();
+	}
 	init(options) {
 		const config = {
 			postGain: 1,
